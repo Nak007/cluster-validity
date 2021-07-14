@@ -1,21 +1,16 @@
 '''
 Available methods are the followings:
- [1] dispersion
- [2] calinski_harabasz
- [3] elbow_index
- [4] silhouette
- [5] wb_index
- [6] gap_statistics
- [7] hartigen_index
- [8] plot_elbow
- [9] plot_wb
-[10] plot_ch
-[11] plot_hartigan
-[12] plot_silhouette
-[13] plot_gap
+[1] dispersion
+[2] calinski_harabasz, plot_ch
+[3] elbow_index, plot_elbow
+[4] silhouette, plot_silhouette
+[5] wb_index, plot_wb
+[6] gap_statistics, plot_gap
+[7] hartigen_index, plot_hartigan
 
 Authors: Danusorn Sitdhirasdr <danusorn.si@gmail.com>
 versionadded:: 13-11-2020
+
 '''
 
 import numpy as np
@@ -24,13 +19,22 @@ from sklearn.metrics import silhouette_score
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 
-__all__ = ['dispersion', 'calinski_harabasz', 
-           'elbow_index', 'silhouette', 'wb_index', 
-           'gap_statistics', 'hartigen_index', 
-           'plot_elbow', 'plot_wb', 'plot_ch',
-           'plot_hartigan','plot_silhouette','plot_gap']
+__all__ = ['dispersion', 
+           'calinski_harabasz', 
+           'elbow_index', 
+           'silhouette', 
+           'wb_index', 
+           'gap_statistics', 
+           'hartigen_index', 
+           'plot_elbow', 
+           'plot_wb', 
+           'plot_ch',
+           'plot_hartigan',
+           'plot_silhouette',
+           'plot_gap']
 
 def dispersion(X, labels, metric='euclidean'):
+    
     '''
     Determine the dispersion within cluster (SSW) 
     and between clusters (SSB), which are defined 
@@ -50,29 +54,30 @@ def dispersion(X, labels, metric='euclidean'):
     Parameters
     ----------
     X : 2d-array, shape of (n_sample, n_feature)
-    \t Training instances. Each row corresponds
-    \t to a single data point.
+        Training instances. Each row corresponds
+        to a single data point.
         
     labels : 2d-array, shape of (n_sample, n_cluster)
-    \t Predicted labels of instances for respective 
-    \t `n_cluster` or kth cluster.
+        Predicted labels of instances for respective 
+        n_cluster or kth cluster.
     
-    metric: `str`, optional, default:'euclidean'
-    \t The distance metric to use. Passes any option 
-    \t accepted by `scipy.spatial.distance.cdist`.
+    metric: str, default="euclidean"
+        The distance metric to use. Passes any option 
+        accepted by `scipy.spatial.distance.cdist`.
     
     Returns
     -------
     intra_disp : array-like, shape (n_cluster,)
-    \t List of within-cluster dispersions wrt. kth
-    \t cluster.
+        List of within-cluster dispersions wrt. kth
+        cluster.
     
     extra_disp : array-like, shape (n_cluster,)
-    \t List of between-clusters dispersions wrt. kth
-    \t cluster. 
+        List of between-clusters dispersions wrt. kth
+        cluster. 
     
     k_clusters : array-like, shape (n_cluster,)
-    \t Number of unique labels wrt. kth cluster.
+        Number of unique labels wrt. kth cluster.
+        
     '''
     # Initialize loop parameters.
     intra_disp, extra_disp, k_clusters = [], [], []
@@ -113,6 +118,7 @@ def dispersion(X, labels, metric='euclidean'):
     return intra_disp, extra_disp, k_clusters
 
 def calinski_harabasz(X, labels, metric='euclidean'):
+    
     '''
     Compute the Calinski and Harabasz index (CH), which 
     is defined as follows:
@@ -128,35 +134,38 @@ def calinski_harabasz(X, labels, metric='euclidean'):
     
     References
     ----------
-    [1] https://www.researchgate.net/publication/257138057
-        _An_examination_of_indices_for_determining_the_
-        number_of_clusters_NbClust_Package
-    [2] https://scikit-learn.org/stable/modules/generated/
-        sklearn.metrics.calinski_harabasz_score.html
+    .. [1] https://www.researchgate.net/publication/
+           257138057_An_examination_of_indices_for_
+           determining_the_number_of_clusters_NbClust_
+           Package
+    .. [2] https://scikit-learn.org/stable/modules/
+           generated/sklearn.metrics.calinski_harabasz_
+           score.html
         
     Parameters
     ----------
     X : 2d-array, shape of (n_sample, n_feature)
-    \t Training instances. Each row corresponds
-    \t to a single data point.
+        Training instances. Each row corresponds to a 
+        single data point.
         
     labels : 2d-array, shape of (n_sample, n_cluster)
-    \t Predicted labels of instances for respective 
-    \t `n_cluster` or kth cluster.
+        Predicted labels of instances for respective 
+        n_cluster or kth cluster.
     
-    metric: `str`, optional, default:'euclidean'
-    \t The distance metric to use. Passes any option 
-    \t accepted by `scipy.spatial.distance.cdist`.
+    metric: str, default="euclidean"
+        The distance metric to use. Passes any option 
+        accepted by `scipy.spatial.distance.cdist`.
         
     Returns
     -------
     score : array-like, shape (n_cluster,)
-    \t The resulting Calinski-Harabasz index. The 
-    \t maximum value of the index is taken as indicating 
-    \t the correct number of clusters in the data.
+        The resulting Calinski-Harabasz index. The 
+        maximum value of the index is taken as indicating 
+        the correct number of clusters in the data.
     
     k_clusters : array-like, shape (n_cluster,)
-    \t List of number  of unique labels wrt. kth cluster.
+        List of number  of unique labels wrt. kth cluster.
+    
     '''
     # The denominator takes maximum between 1, and 
     # `k_clusters` - 1 as to avoid the error when 
@@ -168,6 +177,7 @@ def calinski_harabasz(X, labels, metric='euclidean'):
     return score, k_clusters
 
 def elbow_index(X, labels, metric='euclidean'):
+    
     '''
     This method looks at change of within-group 
     dispersion (`SSW`). One should choose a number of 
@@ -198,27 +208,28 @@ def elbow_index(X, labels, metric='euclidean'):
     Parameters
     ----------
     X : 2d-array, shape of (n_sample, n_feature)
-    \t Training instances. Each row corresponds to a 
-    \t single data point.
+        Training instances. Each row corresponds to a 
+        single data point.
         
     labels : 2d-array, shape of (n_sample, n_cluster)
-    \t Predicted labels of instances for respective 
-    \t `n_cluster` or kth cluster. The number of 
-    \t `n_cluster` must be more than 3.
+        Predicted labels of instances for respective 
+        n_cluster or kth cluster. The number of n_cluster 
+        must be more than 3.
     
-    metric: `str`, optional, default:'euclidean'
-    \t The distance metric to use. Passes any option  
-    \t accepted by `scipy.spatial.distance.cdist`.
+    metric: str, default="euclidean"
+        The distance metric to use. Passes any option  
+        accepted by `scipy.spatial.distance.cdist`.
 
     Returns
     -------
     Gamma : array-like, shape (n_cluster-2,)
-    \t The resulting rate of change in distances. The  
-    \t maximum value of the index is taken as indicating 
-    \t the correct number of clusters in the data.
+        The resulting rate of change in distances. The  
+        maximum value of the index is taken as indicating 
+        the correct number of clusters in the data.
     
     k_clusters : array-like, shape (n_cluster-2,)
-    \t List of number  of unique labels wrt. kth cluster.
+        List of number  of unique labels wrt. kth cluster.
+        
     '''
     # 2nd derivative of the distances.
     inputs = np.vstack(dispersion(X, labels, metric)).T
@@ -229,6 +240,7 @@ def elbow_index(X, labels, metric='euclidean'):
 
 def silhouette(X, labels, metric='euclidean', 
                p_sample=0.5, random_state=None,):
+    
     '''
     Silhouette coefficient is calculated using the mean 
     intra-cluster distance (a) and the mean nearest-
@@ -244,40 +256,41 @@ def silhouette(X, labels, metric='euclidean',
     
     References
     ----------
-    [1] https://en.wikipedia.org/wiki/Silhouette_
-        (clustering)
-    [2] https://scikit-learn.org/stable/auto_examples/
-        cluster/plot_kmeans_silhouette_analysis.html
+    .. [1] https://en.wikipedia.org/wiki/Silhouette_
+           (clustering)
+    .. [2] https://scikit-learn.org/stable/auto_examples/
+           cluster/plot_kmeans_silhouette_analysis.html
         
     Parameters
     ----------
     X : 2d-array, shape of (n_sample, n_feature)
-    \t Training instances. Each row corresponds to a 
-    \t single data point.
+        Training instances. Each row corresponds to a 
+        single data point.
         
     labels : 2d-array, shape of (n_sample, n_cluster)
-    \t Predicted labels of instances for respective 
-    \t `n_cluster` or kth cluster.
+        Predicted labels of instances for respective 
+        n_cluster or kth cluster.
     
-    metric: `str`, optional, default:'euclidean'
-    \t The distance metric to use. Passes any option  
-    \t accepted by `scipy.spatial.distance.cdist`.
+    metric: str, default="euclidean"
+        The distance metric to use. Passes any option  
+        accepted by `scipy.spatial.distance.cdist`.
     
-    p_sample : float, optional, default:0.5
-    \t Percent of samples.
+    p_sample : float, default=0.5
+        Percent of samples.
     
-    random_state : int, optional, defualt:None
-    \t Seed for the random number generator.
+    random_state : int, defualt=None
+        Seed for the random number generator.
     
     Returns
     -------
     score : array-like, shape (n_cluster,)
-    \t The resulting silhouette coefficients. The  
-    \t maximum value of the index is taken as indicating 
-    \t the correct number of clusters in the data.
+        The resulting silhouette coefficients. The  
+        maximum value of the index is taken as indicating 
+        the correct number of clusters in the data.
 
     k_clusters : array-like, shape (n_cluster,)
-    \t List of number of unique labels wrt. kth cluster.
+        List of number of unique labels wrt. kth cluster.
+    
     '''
     # Keyword arguments for `silhouette_score`
     kwargs = dict(metric=metric, random_state=random_state, 
@@ -296,6 +309,7 @@ def silhouette(X, labels, metric='euclidean',
     return score, k_clusters
 
 def wb_index(X, labels, metric='euclidean'):
+    
     '''
     Compute the WB-index (WB), which is defined as 
     follows:
@@ -303,35 +317,36 @@ def wb_index(X, labels, metric='euclidean'):
                     WB = K.SSW/SSB
     
     where SSW, SSB, and K are a dispersion within 
-    cluster, a dispersion between clusters, and
-    number of clusters, respectively.
+    cluster, a dispersion between clusters, and number 
+    of clusters, respectively.
   
     .. versionadded:: 13-11-2020
     
     Parameters
     ----------
     X : 2d-array, shape of (n_sample, n_feature)
-    \t Training instances. Each row corresponds to a 
-    \t single data point.
+        Training instances. Each row corresponds to a 
+        single data point.
         
     labels : 2d-array, shape of (n_sample, n_cluster)
-    \t Predicted labels of instances for respective 
-    \t `n_cluster` or kth cluster.
+        Predicted labels of instances for respective 
+        n_cluster or kth cluster.
     
-    metric: `str`, optional, default:'euclidean'
-    \t The distance metric to use. Passes any option  
-    \t accepted by `scipy.spatial.distance.cdist`.
+    metric: str, default="euclidean"
+        The distance metric to use. Passes any option  
+        accepted by `scipy.spatial.distance.cdist`.
     
     Returns
     -------
     WB : array-like, shape (n_cluster,)
-    \t The resulting WB indices in logarithmic form, 
-    \t LOG(WB). The minimum value of the index is taken 
-    \t as indicating the correct number of clusters in 
-    \t the data.
+        The resulting WB indices in logarithmic form, 
+        LOG(WB). The minimum value of the index is taken 
+        as indicating the correct number of clusters in 
+        the data.
     
     k_clusters : array-like, shape (n_cluster,)
-    \t List of number of unique labels wrt. kth cluster.
+        List of number of unique labels wrt. kth cluster.
+        
     '''
     # The resulting WB indices will be
     inputs = np.vstack(dispersion(X, labels, metric)).T
@@ -343,6 +358,7 @@ def wb_index(X, labels, metric='euclidean'):
 
 def gap_statistics(X, labels, metric='euclidean', p_sample=0.5, 
                    n_bootstrap=5, random_state=None):
+    
     '''
     The idea of the Gap statistic is to compare the SSW 
     (dispersion) to its expectation under an appropriate 
@@ -365,48 +381,49 @@ def gap_statistics(X, labels, metric='euclidean', p_sample=0.5,
     
     References
     ----------
-    [1] https://statweb.stanford.edu/~gwalther/gap
-    [2] https://datasciencelab.wordpress.com/tag/
-        gap-statistic/
+    .. [1] https://statweb.stanford.edu/~gwalther/gap
+    .. [2] https://datasciencelab.wordpress.com/tag/
+           gap-statistic/
     
     Parameters
     ----------
     X : 2d-array, shape of (n_sample, n_feature)
-    \t Training instances. Each row corresponds to a 
-    \t single data point.
+        Training instances. Each row corresponds to a 
+        single data point.
         
     labels : 2d-array, shape of (n_sample, n_cluster)
-    \t Predicted labels of instances for respective 
-    \t `n_cluster` or kth cluster.
+        Predicted labels of instances for respective 
+        n_cluster or kth cluster.
     
-    metric: `str`, optional, default:'euclidean'
-    \t The distance metric to use. Passes any option  
-    \t accepted by `scipy.spatial.distance.cdist`.
+    metric: str, default="euclidean"
+        The distance metric to use. Passes any option  
+        accepted by `scipy.spatial.distance.cdist`.
     
-    p_sample : float, optional, default:0.5
-    \t Percent of samples.
+    p_sample : float, default=0.5
+        Percent of samples.
     
-    n_bootstrap : int, optional, default:5
-    \t Number of bootstrappings for Gap-statistics
+    n_bootstrap : int, default=5
+        Number of bootstrappings for Gap-statistics.
     
-    random_state : int, optional, defualt:None
-    \t Seed for the random number generator.
+    random_state : int, defualt=None
+        Seed for the random number generator.
     
     Returns
     -------
     Wks : array-like, shape (n_cluster,)
-    \t The resulting LOG(Wk) from X. 
+        The resulting LOG(Wk) from X. 
     
     Wkbs : array-like, shape (n_cluster,)
-    \t The resulting E[LOG(Wk)] from a set of random
-    \t uniform distribution of X.
+        The resulting E[LOG(Wk)] from a set of random
+        uniform distribution of X.
     
     sk : array-like, shape (n_cluster,)
-    \t Standard deviation from a set of random uniform 
-    \t distribution of X.
+        Standard deviation from a set of random uniform 
+        distribution of X.
     
     k_clusters : array-like, shape (n_cluster,)
-    \t List of number of unique labels wrt. kth cluster.
+        List of number of unique labels wrt. kth cluster.
+        
     '''
     # Function to compute within-cluster sum of squares
     def intra_dist(x, C, metric):
@@ -463,6 +480,7 @@ def gap_statistics(X, labels, metric='euclidean', p_sample=0.5,
     return Wks, Wkbs, sk, k_clusters
 
 def hartigen_index(X, labels, metric='euclidean'):
+    
     '''
     Compute the Hartigen index (1975), which is defined 
     as follows:
@@ -478,29 +496,30 @@ def hartigen_index(X, labels, metric='euclidean'):
     Parameters
     ----------
     X : 2d-array, shape of (n_sample, n_feature)
-    \t Training instances. Each row corresponds
-    \t to a single data point
+        Training instances. Each row corresponds
+        to a single data point
         
     labels : 2d-array, shape of (n_sample, n_cluster)
-    \t Predicted labels of instances for respective 
-    \t `n_cluster` or kth cluster.
+        Predicted labels of instances for respective 
+        n_cluster or kth cluster.
     
-    metric: `str`, optional, default:'euclidean'
-    \t The distance metric to use. Passes any option 
-    \t accepted by `scipy.spatial.distance.cdist`.
+    metric: str, default="euclidean"
+        The distance metric to use. Passes any option 
+        accepted by `scipy.spatial.distance.cdist`.
         
     Returns
     -------
     Hartigen : array-like, shape (n_cluster,)
-    \t The resulting Hartigen index. The optimum number 
-    \t of clusters is the smallest k which produces 
-    \t H(k) ≤ η (typically η = 10). Nevertheless, when
-    \t H(k) > 10, the minimum of the index can be taken 
-    \t as indicating the correct number of clusters in 
-    \t the data.
+        The resulting Hartigen index. The optimum number 
+        of clusters is the smallest k which produces 
+        H(k) ≤ η (typically η = 10). Nevertheless, when
+        H(k) > 10, the minimum of the index can be taken 
+        as indicating the correct number of clusters in 
+        the data.
     
     k_clusters : array-like, shape (n_cluster,)
-    \t List of number of unique labels wrt. kth cluster.
+        List of number of unique labels wrt. kth cluster.
+        
     '''
     inputs = np.vstack(dispersion(X, labels, metric)).T
     Hartigen = (-np.diff(inputs[:,0])/inputs[1:,0])
@@ -508,176 +527,301 @@ def hartigen_index(X, labels, metric='euclidean'):
     k_clusters = inputs[:-1,2].astype(int).copy()
     return Hartigen, k_clusters
 
-# =========================================================== #
-#                       Plot functions.                       #
-# =========================================================== #
+def get_ax(ax, figsize):
 
-def _check_ax(params):
-    '''Check `axes.Axes` object'''
-    if params.get('ax') is None: return plt.subplots()
-    else: return None, params.get('ax')
+    '''Private: create axis if ax is None'''
+    if ax is None: return plt.subplots(figsize=figsize)[1]
+    else: return ax
+    
+def set_annotation(ax, x, y, anno_format, color="blue"):
+    
+    '''Private: Annotation of y'''
+    # Keyword argument.
+    kwargs = dict(xytext=(0,6), textcoords='offset points',
+                  va='bottom', ha='center', 
+                  fontsize=11, color=color, fontweight=500,
+                  bbox=dict(facecolor='w', pad=0.5, ec='none'))
+    for xy in zip(x,y): 
+        ax.annotate(anno_format(xy[1]), xy,**kwargs)
 
-def annotate_y(ax, x, y, c='k'):
-    '''Annotation of y'''
-    # Keyword arguments for annotation.
-    bbox = dict(facecolor='w', alpha=1, pad=0.25, ec='none')
-    kwargs = dict(xytext=(0,5), textcoords='offset points',
-                  va='bottom', ha='center', fontsize=10, c=c, 
-                  bbox=bbox)
+def set_ylim(ax):
     
-    for xy in zip(x,y):
-        if xy[1]<100: text = '{:.3g}'.format(xy[1])
-        else: text = '{:,.0f}'.format(xy[1])
-        ax.annotate(text, xy,**kwargs)
+    '''Private: Set ax.set_ylim()'''
+    step = np.diff([n._y for n in ax.get_yticklabels()])[0]
+    y_min, y_max = ax.get_ylim()
+    ax.set_ylim(y_min, max(y_max + step, y_max/0.85)) 
+
+def plot_elbow(score, ax=None, plot_kwds=None, 
+               anno_format=None, tight_layout=True):
     
-    # Set ax.set_ylim() to support annotation of y-axis.
-    delta = np.diff([n._y for n in ax.get_yticklabels()])[0]
-    ymin, ymax = ax.get_ylim()
-    ax.set_ylim(ymin,max(ymax+delta,ymax/0.9))
-    
-def plot_elbow(score, ax=None):
     '''
     Plot Elbow-index.
-    
-    .. versionadded:: 12-01-2021
-    
+
     Parameters
     ----------
     score : tuple of arrays
-    \t Output from `elbow_index` function.
+        Output from elbow_index function.
     
-    ax : `axes.Axes` object, optional
-    \t `Axes` object from `plt.subplots`. If `None`,
-    \t `ax` is automatically created.
+    ax : Matplotlib axis object, default=None
+        Predefined Matplotlib axis. If None, ax is created 
+        with default figsize.
+        
+    plot_kwds : keywords, default=None
+        Keyword arguments to be passed to "ax.plot".
+
+    anno_format : string formatter, default=None
+        String formatters (function) for ax.annotate values. 
+        If None, it defaults to "{:,.2f}".format.
+    
+    tight_layout : bool, default=True
+        If True, it adjusts the padding between and around 
+        subplots i.e. plt.tight_layout().
+    
+    Returns
+    -------
+    ax : Matplotlib axis object
+        
     '''
-    fig, ax = _check_ax({'ax':ax})
+    # Create matplotlib.axes if ax is None.
+    width = np.fmax(len(score[1])*0.5,6)
+    ax = get_ax(ax, (width, 4.3))
+
     x = np.arange(len(score[1]))
-    ax.plot(x, score[0], lw=1, marker='o', ms=6, c='b', 
-            fillstyle='none')
+    kwds = dict(lw=1.5, marker='s', ms=8, 
+                fillstyle='none', c="blue")
+    ax.plot(x, score[0], **(kwds if plot_kwds is 
+                            None else {**kwds,**plot_kwds}))
+    
     ax.set_xlabel('Number of clusters k', fontsize=11)
     ax.set_ylabel('Gamma, $\gamma(k)$', fontsize=11)
-    ax.set_facecolor('white')
     ax.set_title('Elbow Method\nChoose $k$ '
                  'that maximizes $\gamma(k)$', fontsize=12)
-    annotate_y(ax, x, score[0], c='b')
+    
+    # ax.annotate number format
+    set_annotation(ax, x, score[0], 
+                   ("{:,.2f}".format if anno_format 
+                    is None else anno_format))
+    set_ylim(ax)
     ax.set_xticks(x)
     ax.set_xticklabels(score[1])
-    if fig!=None: plt.show()
-        
-def plot_wb(score, ax=None):
+    if tight_layout: plt.tight_layout()
+    return ax
+          
+def plot_wb(score, ax=None, plot_kwds=None, 
+            anno_format=None, tight_layout=True):
+    
     '''
     Plot WB-index.
     
-    .. versionadded:: 12-01-2021
-    
     Parameters
     ----------
     score : tuple of arrays
-    \t Output from `wb_index` function.
+        Output from wb_index function.
     
-    ax : `axes.Axes` object, optional
-    \t `Axes` object from `plt.subplots`. If `None`,
-    \t `ax` is automatically created.
+    ax : Matplotlib axis object, default=None
+        Predefined Matplotlib axis. If None, ax is created 
+        with default figsize.
+
+    plot_kwds : keywords, default=None
+        Keyword arguments to be passed to "ax.plot".
+
+    anno_format : string formatter, default=None
+        String formatters (function) for ax.annotate values. 
+        If None, it defaults to "{:,.2f}".format.
+    
+    tight_layout : bool, default=True
+        If True, it adjusts the padding between and around 
+        subplots i.e. plt.tight_layout().
+    
+    Returns
+    -------
+    ax : Matplotlib axis object
+    
     '''
-    fig, ax = _check_ax({'ax':ax})
+    # Create matplotlib.axes if ax is None.
+    width = np.fmax(len(score[1])*0.5,6)
+    ax = get_ax(ax, (width, 4.3))
+    
     x = np.arange(len(score[1]))
-    ax.plot(x, score[0], lw=1, marker='o', ms=6, color='b', 
-            fillstyle='none')
+    kwds = dict(lw=1.5, marker='s', ms=8, 
+                fillstyle='none', c="blue")
+    ax.plot(x, score[0], **(kwds if plot_kwds is 
+                            None else {**kwds,**plot_kwds}))
+    
     ax.set_xlabel('Number of clusters k', fontsize=11)
     ax.set_ylabel('WB index, $wb(k)$', fontsize=11)
-    ax.set_facecolor('white')
     ax.set_title('WB index\nChoose $k$ '
                  'that minimizes $wb(k)$', fontsize=12)
+    
+    # ax.annotate number format
+    set_annotation(ax, x, score[0], 
+                   ("{:,.2f}".format if anno_format 
+                    is None else anno_format))
+    set_ylim(ax)
     ax.set_xticks(x)
     ax.set_xticklabels(score[1].astype(int))
-    annotate_y(ax, x, score[0], c='b')
-    if fig!=None: plt.show()
+    if tight_layout: plt.tight_layout()
+    return ax
         
-def plot_ch(score, ax=None):
+def plot_ch(score, ax=None, plot_kwds=None, 
+            anno_format=None, tight_layout=True):
+    
     '''
     Plot Calinski-Harabasz index.
     
-    .. versionadded:: 12-01-2021
-    
     Parameters
     ----------
     score : tuple of arrays
-    \t Output from `calinski_harabasz` function.
+        Output from calinski_harabasz function.
     
-    ax : `axes.Axes` object, optional
-    \t `Axes` object from `plt.subplots`. If `None`,
-    \t `ax` is automatically created.
+    ax : Matplotlib axis object, default=None
+        Predefined Matplotlib axis. If None, ax is created 
+        with default figsize.
+
+    plot_kwds : keywords, default=None
+        Keyword arguments to be passed to "ax.plot".
+
+    anno_format : string formatter, default=None
+        String formatters (function) for ax.annotate values. 
+        If None, it defaults to "{:,.2f}".format.
+    
+    tight_layout : bool, default=True
+        If True, it adjusts the padding between and around 
+        subplots i.e. plt.tight_layout().
+    
+    Returns
+    -------
+    ax : Matplotlib axis object
+    
     '''
-    fig, ax = _check_ax({'ax':ax})
+    # Create matplotlib.axes if ax is None.
+    width = np.fmax(len(score[1])*0.5,6)
+    ax = get_ax(ax, (width, 4.3))
+    
     x = np.arange(len(score[1]))
-    ax.plot(x, score[0], lw=1, marker='o', ms=6, 
-            color='b', fillstyle='none')
+    kwds = dict(lw=1.5, marker='s', ms=8, 
+                fillstyle='none', c="blue")
+    ax.plot(x, score[0], **(kwds if plot_kwds is 
+                            None else {**kwds,**plot_kwds}))
+    
     ax.set_xlabel('Number of clusters k', fontsize=11)
     ax.set_ylabel('Calinski-Harabasz index, $ch(k)$', fontsize=11)
-    ax.set_facecolor('white')
     ax.set_title('Calinski Harabasz index\nChoose $k$ '
                  'that maximizes $ch(k)$', fontsize=12)
+    
+    # ax.annotate number format
+    set_annotation(ax, x, score[0], 
+                   ("{:,.2f}".format if anno_format 
+                    is None else anno_format))
+    set_ylim(ax)
     ax.set_xticks(x)
-    ax.set_xticklabels(score[1])
-    annotate_y(ax, x, score[0], c='b')
-    if fig!=None: plt.show()
+    ax.set_xticklabels(np.array(score[1]).astype(int))
+    if tight_layout: plt.tight_layout()
+    return ax
         
-def plot_hartigan(score, ax=None):
+def plot_hartigan(score, ax=None, plot_kwds=None, 
+                  anno_format=None, tight_layout=True):
+    
     '''
     Plot Hartigan-index.
     
-    .. versionadded:: 12-01-2021
-    
     Parameters
     ----------
     score : tuple of arrays
-    \t Output from `hartigen_index` function.
+        Output from hartigen_index function.
     
-    ax : `axes.Axes` object, optional
-    \t `Axes` object from `plt.subplots`. If `None`,
-    \t `ax` is automatically created.
+    ax : Matplotlib axis object, default=None
+        Predefined Matplotlib axis. If None, ax is created 
+        with default figsize.
+
+    plot_kwds : keywords, default=None
+        Keyword arguments to be passed to "ax.plot".
+
+    anno_format : string formatter, default=None
+        String formatters (function) for ax.annotate values. 
+        If None, it defaults to "{:,.2f}".format.
+    
+    tight_layout : bool, default=True
+        If True, it adjusts the padding between and around 
+        subplots i.e. plt.tight_layout().
+    
+    Returns
+    -------
+    ax : Matplotlib axis object
+    
     '''
-    fig, ax = _check_ax({'ax':ax})
+    # Create matplotlib.axes if ax is None.
+    width = np.fmax(len(score[1])*0.5,6)
+    ax = get_ax(ax, (width, 4.3))
+    
     x = np.arange(len(score[1]))
-    ax.plot(x, score[0], lw=1, marker='o', ms=6, color='b', 
-            fillstyle='none')
+    kwds = dict(lw=1.5, marker='s', ms=8, 
+                fillstyle='none', c="blue")
+    ax.plot(x, score[0], **(kwds if plot_kwds is 
+                            None else {**kwds,**plot_kwds}))
+    
     ax.set_xlabel('Number of clusters k', fontsize=11)
     ax.set_ylabel('Hartigen index, $H(k)$', fontsize=11)
     ax.set_facecolor('white')
     ax.set_title('Hartigen index\nChoose the smallest '
                  '$k$ such that $H(k) \leq \eta$', fontsize=12)
+    
+    # ax.annotate number format
+    set_annotation(ax, x, score[0], 
+                   ("{:,.2f}".format if anno_format 
+                    is None else anno_format))
+    set_ylim(ax)
     ax.set_xticks(x)
-    ax.set_xticklabels(score[1])
-    annotate_y(ax, x, score[0], c='b')
-    if fig!=None: plt.show()
-
-def plot_silhouette(score, ax=None):
+    ax.set_xticklabels(np.array(score[1]).astype(int))
+    if tight_layout: plt.tight_layout()
+    return ax
+      
+def plot_silhouette(score, ax=None, plot_kwds=None, 
+                    anno_format=None, tight_layout=True):
+    
     '''
     Plot Silhouette-score.
-    
-    .. versionadded:: 12-01-2021
     
     Parameters
     ----------
     score : tuple of arrays
-    \t Output from `silhouette` function.
+        Output from silhouette function.
     
-    ax : `axes.Axes` object, optional
-    \t `Axes` object from `plt.subplots`. If `None`,
-    \t `ax` is automatically created.
+    ax : Matplotlib axis object, default=None
+        Predefined Matplotlib axis. If None, ax is created 
+        with default figsize.
+
+    plot_kwds : keywords, default=None
+        Keyword arguments to be passed to "ax.plot".
+
+    anno_format : string formatter, default=None
+        String formatters (function) for ax.annotate values. 
+        If None, it defaults to "{:,.2f}".format.
+    
+    tight_layout : bool, default=True
+        If True, it adjusts the padding between and around 
+        subplots i.e. plt.tight_layout().
+    
+    Returns
+    -------
+    ax : Matplotlib axis object
+    
     '''
-    fig, ax = _check_ax({'ax':ax})
+    # Create matplotlib.axes if ax is None.
+    width = np.fmax(len(score[1])*0.5,6)
+    ax = get_ax(ax, (width, 4.3))
+    
     x = np.arange(len(score[1]))
-    ax.plot(x, score[0], lw=1, marker='o', ms=6, color='b', 
-            fillstyle='none')
+    kwds = dict(lw=1.5, marker='s', ms=8, 
+                fillstyle='none', c="blue")
+    ax.plot(x, score[0], **(kwds if plot_kwds is 
+                            None else {**kwds,**plot_kwds}))
+    
     ax.set_xlabel('Number of clusters k', fontsize=11)
     ax.set_ylabel('Average Silhouette width, $sil(k)$', fontsize=11)
-    ax.set_facecolor('white')
     ax.set_title('Silhouette\nChoose $k$ that '
                  'maximizes $sil(k)$', fontsize=12)
-    ax.set_xticks(x)
-    ax.set_xticklabels(score[1])
-
+    
     # Criteria line.
     kwargs = dict(xytext=(0,-1), textcoords='offset points',
                   va='top', ha='right', fontsize=10, 
@@ -689,71 +833,124 @@ def plot_silhouette(score, ax=None):
     kwargs = dict(color='#485460', lw=1, ls='--')
     for n in [0.25,0.5,0.7]: ax.axhline(n, **kwargs)
 
-    # Limit of x and y axes.
-    incr = (1 - min(score[0]))*0.05
-    annotate_y(ax, x, score[0], c='b')
-    ax.set_xlim(-0.5,len(x)-0.5)
-    if fig!=None: plt.show()
         
-def plot_gap(score, ch_type=1, ax=None):
+    # ax.annotate number format
+    set_annotation(ax, x, score[0], 
+                   ("{:,.2f}".format if anno_format 
+                    is None else anno_format))
+    set_ylim(ax)
+    ax.set_xticks(x)
+    ax.set_xticklabels(np.array(score[1]).astype(int))
+    ax.set_xlim(-0.5,len(x)-0.5)
+    if tight_layout: plt.tight_layout()
+    return ax  
+           
+def plot_gap(score, ch_type=1, ax=None, 
+             plot_kwds=None, errorbar_kwds=None,
+             anno_format=None, tight_layout=True):
+    
     '''
     Plot Gap-Statistics.
-    
-    .. versionadded:: 12-01-2021
     
     Parameters
     ----------
     score : tuple of arrays
-    \t Output from `hartigen_index` function.
+        Output from hartigen_index function.
     
-    ch_type : `int`, optional, (default:1)
-    \t 1 : It plots Log(W(k)) and E{Log(W(kb))}
-    \t     (reference distribution).
-    \t 2 : It plots Gap-Statistics of all `k` group
-    \t     i.e. Gap(k) = E{Log(W(kb))} - Log(W(k)).
-    \t 3 : It plots Delta(k), which is defined as
-    \t     Delta(k) = Gap(k) - Gap(k+1) + s(k+1).
+    ch_type : int, default=1
+        1 : It plots Log(W(k)) and E{Log(W(kb))}
+            (reference distribution).
+        2 : It plots Gap-Statistics of all `k` group
+            i.e. Gap(k) = E{Log(W(kb))} - Log(W(k)).
+        3 : It plots Delta(k), which is defined as
+            Delta(k) = Gap(k) - Gap(k+1) + s(k+1).
     
-    ax : `axes.Axes` object, optional
-    \t `Axes` object from `plt.subplots`. If `None`,
-    \t `ax` is automatically created.
+    ax : Matplotlib axis object, default=None
+        Predefined Matplotlib axis. If None, ax is created 
+        with default figsize.
+
+    plot_kwds : keywords, default=None
+        Keyword arguments to be passed to "ax.plot".
+    
+    errorbar_kwds : keywords, default=None
+        Keyword arguments to be passed to "ax.errorbar".
+    
+    anno_format : string formatter, default=None
+        String formatters (function) for ax.annotate values. 
+        If None, it defaults to "{:,.2f}".format.
+    
+    tight_layout : bool, default=True
+        If True, it adjusts the padding between and around 
+        subplots i.e. plt.tight_layout().
+    
+    Returns
+    -------
+    ax : Matplotlib axis object
+    
     '''
-    fig, ax = _check_ax({'ax':ax})
+    # Create matplotlib.axes if ax is None.
+    width = np.fmax(len(score[1])*0.5,6)
+    ax = get_ax(ax, (width, 4.3))
+    
     x = np.arange(len(score[3]))
     
     if ch_type==1:
+        
         # Compare Log(W(k)) against E{Log(W(kb))} reference distribution.
-        kwargs = dict(lw=1, marker='o', ms=6, fillstyle='none')
+        kwds = dict(lw=1.5, marker='s', ms=8, fillstyle='none')
         plot_dict = [{'color':'b','label':r'$\log{(W_{k})}$'},
                      {'color':'k','label':r'$E\{\log{(W_{kb})}\}$'}]
-        ax.plot(x, score[1], **{**kwargs,**plot_dict[1]})
-        ax.plot(x, score[0], **{**kwargs,**plot_dict[0]})
+        for n in [0,1]:
+            kwds.update(plot_dict[n])
+            ax.plot(x, score[n], **(kwds if plot_kwds is 
+                                    None else {**kwds,**plot_kwds}))
+        
+            # ax.annotate number format
+            set_annotation(ax, x, score[n], 
+                           ("{:,.2f}".format if anno_format 
+                            is None else anno_format), 
+                           plot_dict[n]["color"])
+
         ax.set_ylabel(r'Intra-cluster distance = $\log{(W_{k})}$', fontsize=11)
         ax.set_title('Gap-Statistics\nComparison of $W_{k}$ with null '
                      'reference distribution $W_{kb}$', fontsize=12)
         ax.legend(loc='best', framealpha=0)
     
     elif ch_type==2:
-        #  Gap(k) = E{Log(W(kb))} - Log(W(k)) 
-        ax.errorbar(x, score[1]-score[0], yerr=score[2]*2, elinewidth=1, 
-                    lw=1, marker='o', ms=6, fillstyle='none', c='b')
+        
+        #  Gap(k) = E{Log(W(kb))} - Log(W(k))
+        kwds = dict(elinewidth=1, lw=1.5, marker='s', ms=8, 
+                    fillstyle='none', color="blue")
+        ax.errorbar(x, score[1]-score[0], yerr=score[2]*2, 
+                    **(kwds if errorbar_kwds is None else {**kwds,**errorbar_kwds}))
+        
         ax.set_ylabel(r'$Gap(k) = E\{\log{(W_{kb})}\}-\log{(W_{k})}$', fontsize=11)
         ax.set_title('Gap-Statistics\nChoose $k$ such that '
                      '$Gap(k)$ is maximized.', fontsize=12)
-        annotate_y(ax, x, score[1]-score[0], c='b')
+        
+        set_annotation(ax, x, score[1]-score[0], 
+                       ("{:,.2f}".format if anno_format 
+                        is None else anno_format))
         
     elif ch_type==3:
+        
         # Delta(k) = Gap(k) - Gap(k+1) + s_{k+1}
         gaps = score[1]-score[0]
         gaps = np.hstack((gaps[:-1]-gaps[1:]+score[2][1:],[0]))
-        ax.plot(x, gaps, lw=1, marker='o', ms=6, c='b', fillstyle='none')
+        kwds = dict(lw=1.5, marker='s', ms=8, fillstyle='none', color="blue")
+        ax.plot(x, gaps, **(kwds if plot_kwds is 
+                            None else {**kwds,**plot_kwds}))
+        
         ax.set_ylabel(r'$\Delta = Gap(k) - Gap(k+1) + s_{k+1}$', fontsize=11)
         ax.set_title('Gap-Statistics\nChoose the smallest $k$ such that '
                      '$\Delta \geq0$', fontsize=12)
         ax.axhline(0, lw=2, c='grey', ls='-')
-        annotate_y(ax, x, gaps, c='b')
-    
+        set_annotation(ax, x, gaps, ("{:,.2f}".format if anno_format 
+                                     is None else anno_format))
+     
+    set_ylim(ax)
     ax.set_xticks(x)
-    ax.set_xticklabels(score[3])
+    ax.set_xticklabels(np.array(score[3]).astype(int))
     ax.set_xlabel('Number of clusters k', fontsize=11)
-    if fig!=None: plt.show()
+    if tight_layout: plt.tight_layout()
+    return ax
